@@ -1,18 +1,37 @@
 import "./Category.scss";
 
-import catOne from '../../../assets/category/cat-1.jpg'
-import catTwo from '../../../assets/category/cat-2.jpg'
-import catThree from '../../../assets/category/cat-3.jpg'
-import catFour from '../../../assets/category/cat-4.jpg'
+import {useNavigate} from 'react-router-dom'
 
-const Category = () => {
+// import catOne from '../../../assets/category/cat-1.jpg'
+// import catTwo from '../../../assets/category/cat-2.jpg'
+// import catThree from '../../../assets/category/cat-3.jpg'
+// import catFour from '../../../assets/category/cat-4.jpg'
+
+const Category = ({categories , baseUrl}) => {
+
+    const navigate = useNavigate();
+
+    console.log("-->", baseUrl)
+    // category.map((item)=>{
+    //     console.log(item)
+    // })
     return (
         <div className="category-section">
             <div className="category-content">
-                <div className="category">
-                    <img src={catOne} alt="img" />
-                </div>
-                <div className="category">
+
+                {
+                  categories?.map((item)=>{
+                    console.log(item?.attributes?.img?.data?.attributes?.url)
+                    return(
+                        <div key={item?.id} className="category" onClick={()=>navigate(`/category/${item?.id}`)}>
+                           <img src={baseUrl + item?.attributes?.img?.data?.attributes?.url} alt="img" />
+                        </div>
+                    )
+                 })
+                }
+
+
+                {/* <div className="category">
                     <img src={catTwo} alt="img" />
                 </div>
                 <div className="category">
@@ -20,7 +39,7 @@ const Category = () => {
                 </div>
                 <div className="category">
                     <img src={catFour} alt="img" />
-                </div>
+                </div> */}
             </div>
         </div>
     )

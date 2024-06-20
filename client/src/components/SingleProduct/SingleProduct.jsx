@@ -11,28 +11,60 @@ import {
 
 import RelatedProducts from '../SingleProduct/RelatedProducts/RelatedProducts'
 
-import ProductImg from "../../assets/products/earbuds-prod-3.webp";
+// import ProductImg from "../../assets/products/earbuds-prod-3.webp";
+import { useParams } from "react-router-dom";
+import {useFetch} from '../../hooks/useFetch';
+import { useContext, useState } from "react";
+import { Context } from "../../utils/context";
 
 const SingleProduct = () => {
+
+  const [quantity , setQuantity] = useState(1)
+
+  const { handleAddToCart } = useContext(Context)
+
+  const handleIncrement = () => {
+      setQuantity((prev) => prev + 1)
+  }
+
+  const handledecrement = () => {
+     setQuantity((prev) => {
+      if(quantity === 1){
+          return 1
+       }
+       return prev - 1
+     })
+  }
+
+  const {id} = useParams()
+  const baseUrl = 'http://localhost:1337'
+
+  const {data} = useFetch(`/api/products?populate=*&[filters][id]=${id}`)
+  if(!data) return;
+
+  const product = data?.data[0].attributes;
   return (
     <div className="single-product-page-content">
       <div className="layout">
         <div className="single-page-product">
           <div className="left-content">
-            <img src={ProductImg} alt="img" />
+            <img src={baseUrl + product?.img?.data[0]?.attributes?.url} alt="img" />
           </div>
           <div className="right-content">
-            <div className="name">Product Name</div>
-            <div className="price">Price</div>
-            <div className="description">Description</div>
+            <div className="name">{product?.title}</div>
+            <div className="price">{product?.price}</div>
+            <div className="description">{product?.des}</div>
 
             <div className="cart-btn">
               <div className="quantity-btn">
-                <span>+</span>
-                <span>5</span>
-                <span>-</span>
+                <span onClick={handleIncrement}>+</span>
+                <span>{quantity}</span>
+                <span onClick={handledecrement}>-</span>
               </div>
-              <div className="add-to-cart-btn">
+              <div className="add-to-cart-btn" onClick={()=>{
+                handleAddToCart(data?.data[0] , quantity)
+                setQuantity(1)
+                }}>
                 <button className="button"><FaCartPlus className="icon"/>
                   Add to Cart</button>
               </div>
@@ -43,7 +75,7 @@ const SingleProduct = () => {
             <div className="info-item">
                 <span className="text-bold">Category:
 
-                  <span style={{margin: "0 5px"}}>Headphones</span>
+                  <span style={{margin: "0 5px"}}>{product?.categories?.data[0]?.attributes?.title}</span>
 
                 </span>
 
@@ -63,7 +95,7 @@ const SingleProduct = () => {
           </div>
         </div>
 
-        <RelatedProducts />
+        <RelatedProducts productId = {id} categoryId = {product.categories.data[0].id}/>
 
       </div>
     </div>

@@ -1,11 +1,39 @@
 
 import "./Home.scss";
 
+import {useContext, useEffect} from 'react'
+
 import Banner from './Banner/Banner'
 import Category from "./Category/Category";
 import Products from "../Products/Products";
+import { fetchDataFromApi } from "../../utils/api";
+import { Context } from "../../utils/context";
 
 const Home = () => {
+    const baseUrl = 'http://localhost:1337'
+    const {category , setCategory, product , setProduct} = useContext(Context);
+
+    useEffect(()=>{
+        console.log("Print")
+        getCategories();
+        getProdcuts()
+    }, [])
+
+    const getCategories = () => {
+        fetchDataFromApi("/api/categories?populate=*").then((res)=>{
+            console.log(res.data)
+            setCategory(res?.data);
+        })
+    }
+
+    const getProdcuts = () => {
+        fetchDataFromApi("/api/products?populate=*").then((res)=>{
+            console.log(res)
+            setProduct(res?.data);
+        })
+    }
+
+
     return (
         <div>
             {/* Home */}
@@ -29,8 +57,8 @@ const Home = () => {
 
             <div className="main-content">
                 <div className="layout">
-                    <Category />
-                    <Products innerValue={true} headingText = "Popular Products"/>
+                    <Category categories={category} baseUrl={baseUrl}/>
+                    <Products products = {product} innerValue={true} headingText = "Popular Products" baseUrl={baseUrl}/>
                 </div>
             </div>
         </div>

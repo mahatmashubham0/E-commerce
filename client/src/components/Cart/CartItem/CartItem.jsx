@@ -2,35 +2,46 @@ import "./CartItem.scss";
 
 import { MdClose } from "react-icons/md";
 
-import earbudsProd from "../../../assets/products/earbuds-prod-4.webp";
+import { useContext } from "react";
+import { Context } from "../../../utils/context";
 
 const CartItem = () => {
+  const baseUrl = 'http://localhost:1337'
+  const { cartItem ,  handleRemoveFromCart,handleCartProductQuantity } =
+    useContext(Context);
+
+    console.log(cartItem)
+
   return (
     <div className="cart-products">
-      <div className="cart-product">
+      {cartItem.map((item) => (
 
-        <div className="img-container">
-          <img src={earbudsProd} alt="img" />
+        <div key={item.id} className="cart-product">
+          <div className="img-container">
+            <img src={baseUrl + item?.attributes?.img?.data[0]?.attributes?.url} alt="img" />
+          </div>
+
+          <div className="prod-details">
+            <div className="name">{item.attributes.title}</div>
+            {/* <MdClose className="pro-close-btn" /> */}
+            <div className="quantity-btn">
+              <span onClick={()=>handleCartProductQuantity('dec' , item)}>-</span>
+              <span>{item.attributes.quantity}</span>
+              <span onClick={()=>handleCartProductQuantity('inc' , item)}>+</span>
+            </div>
+            <div className="quantity-product">
+              <span>{item.attributes.quantity}</span>
+              <span>×</span>
+              <span style={{ color: "#04AA6D" }}>₹ {item.attributes.price * item.attributes.quantity}</span>
+            </div>
+          </div>
+
+          <MdClose className="pro-close-btn" onClick={()=>handleRemoveFromCart(item)}/>  {/* we remove item item from item array and then array
+           print data using map
+          */}
         </div>
 
-        <div className="prod-details">
-          <div className="name">Product Name</div>
-          {/* <MdClose className="pro-close-btn" /> */}
-          <div className="quantity-btn">
-            <span>+</span>
-            <span>5</span>
-            <span>-</span>
-          </div>
-          <div className="quantity-product">
-            <span>3</span>
-            <span>×</span>
-            <span style={{color: "#04AA6D"}}>₹ 14582</span>
-          </div>
-        </div>
-
-        <MdClose className="pro-close-btn" />
-        
-      </div>
+      ))}
     </div>
   );
 };

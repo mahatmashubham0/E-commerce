@@ -4,6 +4,7 @@
 .prodcut-card {
     width: calc(50% - 5px);
     margin-bottom: 20px;
+    cursor: pointer;
     // margin: 0 auto;
 
     @include md {

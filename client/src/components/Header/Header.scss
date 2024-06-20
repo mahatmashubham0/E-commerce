@@ -37,6 +37,7 @@
          font-size: 25px;
          font-weight: 600;
          transform: translatex(-20px);
+         cursor: pointer;
        }
        .header-right{
          display: flex;
@@ -53,7 +54,7 @@
             span{
                 min-width: 20px;
                 align-items: center;
-                background-color: rgb(3, 146, 228);
+                background-color: #04AA6D;
                 padding: 2.5px;
                 display: flex;
                 padding-top: 1px;
